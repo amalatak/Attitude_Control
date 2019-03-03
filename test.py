@@ -3,5 +3,6 @@
 import numpy as np
 
 name = "Johnny Johnny"
+action = "eating sugar"
 
 print(name)
