@@ -113,7 +113,7 @@ def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_th
 
 def sensors(angular_vel_inertial, Bxyz, Sat_pos):
     
-    au = np.au
+    au = cn.au
     bias = np.zeros([3, 1])
     ARW = np.zeros([3, 1])
 
@@ -174,8 +174,29 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, angular_observed, r_Sat_i, dt_thrust):
 
     r_Sun2Sat_i = r_Sun_i - r_Sat_i
 
+    thrust_duration = dt_thrust
+    thrust_command = np.zeros([4, 4])
+
     # ++++++++++++++++++ TRIAD +++++++++++++++++++++ #
 
+    r_Sun_r = np.matmul(RNV, r_Sun_i)
+    e_Sun_r = r_Sun_r/np.linalg.norm(r_Sun_r)
+    r_Sun2Sat_r = np.matmul(RNV, r_Sun2Sat_i)
+    e_Sun2Sat_r = r_Sun2Sat_r/np.linalg.norm(r_Sun2Sat_r)
+    r_Sat_r = np.matmul(RNV, r_Sat_i)
+    e_Sat_r = r_Sat_r/np.linalg.norm(r_Sat_r)
+
+    # algorithm
+
+    x_b = e_Sat_b
+    z_b = np.cross(x_b, e_Sun2Sat_b)/np.linalg.norm(np.cross(x_b, e_Sun2Sat_b))
+    y_b = np.cross(z_b, x_b)
+
+    x_r = e_Sat_r
+    z_r = np.cross(x_r, e_Sun2Sat_r)/np.linalg.norm(np.cross(x_r, e_Sun2Sat_r))
+    y_r = np.cross(z_r, x_r)
+
+    
 
 
     return 0
