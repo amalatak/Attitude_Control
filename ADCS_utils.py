@@ -61,7 +61,10 @@ def nominal_data(oe, JDstart, orbits, interval):
 
 
 def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_thrust):
+    # Needs to be checked for errors
+    #
     # inputs:
+    #
     #  -  1x3  perturbation array
     #  -  16x1 thrust array
     #  -  3x1 inertial angular velocity array
@@ -69,21 +72,28 @@ def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_th
     #  -  3x3 satellite inertial matrix
     #  -  scalar thrust duration time
     #
-    # output: 
-    #  -  
+    # outputs 3x13 matrix of:
+    #
+    #  -  3x3 new attitude in body frame
+    #  -  3x3 new attitude in inertial frame
+    #  -  3x1 new angular velocity in body frame
+    #  -  3x1 new angular velocity in inertial frame
+    #  -  3x3 transformation matrix, inertial to body
+    #  -  3x1 euler angle vector
+    #  -  3x1 moment vectors
 
-    # print(Bxyz)
 
     # initialize variables
+    DCM0 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])     # body attitude  ------------------- ?
+    moment_total = np.zeros([3, 1])                        # total moment around body axis
+    new_attitude_body = np.zeros([3, 3])                   # new attitude, body
+    new_attitude_intertial = np.zeros([3, 3])              # new attitude, inertial
+    new_angular_body = np.zeros([3, 1])                    # new angular vel, body
+    new_angular_inertial = np.zeros([3, 1])                # new angular vel, inertial
+    d_angle = np.zeros([3, 1])                             # change in angle over dt, specifically, dt_thrust
+    angular_body = np.matmul(np.matrix.transpose(DCM0),\
+         angular_inertial)                                 # body angular velocity ------------ ?
 
-    DCM0 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    moment_total = np.zeros([3, 1])
-    new_attitude_body = np.zeros([3, 3])
-    new_attitude_intertial = np.zeros([3, 3])
-    new_angular_body = np.zeros([3, 1])
-    new_angular_inertial = np.zeros([3, 1])
-    d_angle = np.zeros([3, 1])
-    angular_body = np.matmul(np.matrix.transpose(DCM0), angular_inertial)
 
     # sum thrust moments around body axes
     roll_moment = .5*(thrust_arr[1] + thrust_arr[9] - thrust_arr[4] - thrust_arr[11])     # body x
@@ -95,23 +105,21 @@ def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_th
     moment_total[1, 0] = pitch_moment + perturbations[1]
     moment_total[2, 0] = yaw_moment + perturbations[2]
 
-    # calculate new angular velocity
 
-        
+    # calculate new angular velocity        
     new_angular_body = angular_body + np.matmul(np.linalg.inv(I_sat), moment_total)*dt_thrust
     d_angle = angular_body*dt_thrust + .5*np.matmul(np.linalg.inv(I_sat), moment_total)*(dt_thrust**2)
 
-    R3 = utils.R3(-d_angle[2, 0])
+    R3 = utils.R3(-d_angle[2, 0]) 
     R2 = utils.R2(-d_angle[1, 0])
     R1 = utils.R1(-d_angle[0, 0])
 
-
     transform = np.matmul(np.matmul(R3, R2), R1)
     new_attitude_body = np.matmul(np.linalg.inv(transform), np.linalg.inv(DCM0))
+    new_attitude_intertial = np.matmul(new_attitude_body, Bxyz)
+
     # Tbinew = np.matmul(transform, Bxyz)
 
-
-    new_attitude_intertial = np.matmul(new_attitude_body, Bxyz)
     true_TiB = Bxyz
     new_angular_inertial = np.matmul(Bxyz, new_angular_body)
 
@@ -120,30 +128,32 @@ def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_th
          new_angular_inertial, true_TiB, d_angle, moment_total], axis=1)
 
     # 3x15 or 3x [new_attitude_body(3), new_attitude_inertial(3), new_angular_body(1),
-    #  new_anguler_inertial(1), true_TiB(3), d_angle(3), moment(1)]
-
+    #  new_anguler_inertial(1), true_TiB(3), d_angle(1), moment(1)]
 
     return data
 
+
 def sensors(angular_vel_inertial, Bxyz, Sat_pos):
     
-    au = cn.au
-    bias = np.zeros([3, 1])
-    ARW = np.zeros([3, 1])
-
-    gyro = angular_vel_inertial + bias + ARW # gyro measurement
+    au = cn.au                                # scalar distance to the sun, in m
+    bias = np.zeros([3, 1])                   # 3x1 gyro bias vec
+    ARW = np.zeros([3, 1])                    # 3x1 angular random walk vec
+    sun_dir = np.array([[0], [1], [0]])       # 3x1 unit vector to sun from ECI
+    gyro = angular_vel_inertial + bias + ARW  # 3x1 gyro measurement of angular velocity
 
 
     # vector directions
-
-    r_Sun_i = au*np.array([[0], [1], [0]])
-    e_Sun_i = r_Sun_i/np.linalg.norm(r_Sun_i)
+    # 3x1 sun vectors
+    r_Sun_i = au*sun_dir
+    e_Sun_i = r_Sun_i/np.linalg.norm(r_Sun_i)     # 3x1 sun vector ECI
 
     r_Sat_i = np.matrix.transpose(Sat_pos)
-    e_Sat_i = r_Sat_i/np.linalg.norm(r_Sat_i)
+    r_Sat_i = np.array([Sat_pos])
+    r_Sat_i = r_Sat_i.T
+    e_Sat_i = r_Sat_i/np.linalg.norm(r_Sat_i)     # 3x1 sat vector ECI
 
     rSun2Sat = r_Sun_i - r_Sat_i
-    e_Sun2Sat = rSun2Sat/np.linalg.norm(rSun2Sat)
+    e_Sun2Sat = rSun2Sat/np.linalg.norm(rSun2Sat) # vector from sun to sat
 
     # Calculate Sat to Sun vector direction and Sat to Earth direction to send to 
     # ADCS, plus a little noise
