@@ -26,13 +26,10 @@ Body_xyz0 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]) # starting orientation i
 enable_controller = 1    # turn controller on and off
 m_Sat = 500 # kg
 Isat = m_Sat*np.array([[.125, 0, 0], [0, .39583, 0], [0, 0, .39583]]) # satellite inertial matrix (kg^2/m^3)
-
-
 oe0 = np.array([a, e, i, argp, RAAN, nu])
 
 
 # nominal data #
-
 nominal_data = ADCS.nominal_data(oe0, JDstart, n_orbits, t_int)
 # [time_vec, rvmat, DCM_nom, w_nom]
 
@@ -53,14 +50,12 @@ dt_thust = .01                           # thruster fire time
 time = .8   # WTF is this??
 
 thrustPlots = np.zeros([16, n_times])    #
-
-
 Body_xyz = Body_xyz0
 
 
 for i in range(n_times):
 
-    # obtain orientation of sat at time, i
+    # obtain 3x3 orientation (RNV) of sat at time, i
     RNV = np.array([nominal_data[1, 7:10], nominal_data[1, 10:13], nominal_data[1, 13:16]])
 
     # ignore perturbations for now
@@ -74,7 +69,10 @@ for i in range(n_times):
     angularI = dynamics[0:3, 3:6]
     momentsPlot = dynamics[0:3, -1]
 
+    # [e_Sun2Sat_b, e_Sat_b, gyro]
     sensors = ADCS.sensors(angularI, Body_xyz, nominal_data[i, 1:4])
+
+    t_command_t_duration_RPY = ADCS.ADCS(RNV, sensors[:, 0], sensors[:, 1], sensors[:, 2], nominal_data[i, 1:4], dt_thrust)
 
     
 

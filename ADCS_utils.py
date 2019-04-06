@@ -10,6 +10,8 @@ import random
 
 
 def desired_attitude(rv_mat):
+    # rv_mat must be a vertical Nx6 position-velocity matrix
+    # output a radial-normal-vel frame for all rows
     n_samples = len(rv_mat[:, 0])
     RNV = np.zeros([n_samples, 9])
     for i in range(n_samples):
@@ -17,10 +19,12 @@ def desired_attitude(rv_mat):
         N = np.cross(rv_mat[i, 0:3], rv_mat[i, 3:6])/np.linalg.norm(np.cross(rv_mat[i, 0:3], rv_mat[i, 3:6])) # out of plane
         V = np.cross(R, N)/np.linalg.norm(np.cross(R, N)) # Complete RH system
         RNV[i, 0:9] = np.concatenate((R, N, V))
+    return RNV 
 
-    return RNV
 
 def desired_angular_vel(rv_mat):
+    # rv_mat must be a vertical Nx6 position-velocity matrix
+    # output a nominal inertial angular velocity 
     n_samples = len(rv_mat[:, 0])
     w_nom = np.zeros([n_samples, 3])
     for i in range(n_samples):
@@ -33,31 +37,42 @@ def nominal_data(oe, JDstart, orbits, interval):
     # number of orbits and time interval
     # 
     # outputs an Nx19 matrix with [time, position, velocity, nominal attitude, nominal angular velocity]
+    #
+    #
 
+    # constants and initialization
+    period = utils.orbital_period(oe[0], cn.mu_e)         # orbital period
+    rv0 = utils.oe2rv(oe, cn.mu_e)                        # initial position-velocity
+    Start_Time = JDstart*86400                            # convert JDstart to s
+    End_Time = Start_Time + orbits*period                 # get end time
+    n_times = int((End_Time - Start_Time)/interval)       # N number of elements for arrays
+    time_vec = np.linspace(Start_Time, End_Time, n_times) # get 1xN time vector
+    rvmat = utils.orbit_prop(rv0, time_vec)               # Nx6 position-velocity matrix
+    DCM_nom = desired_attitude(rvmat)                     # Nx9 RNV matrix
+    w_nom = desired_angular_vel(rvmat)                    # Nx3 angular velocity matrix
 
-    period = utils.orbital_period(oe[0], cn.mu_e)
+    # transpose time vector to allow concatenation
+    time_vec = np.array([time_vec])
+    time_vec = time_vec.T
 
-    rv0 = utils.oe2rv(oe, cn.mu_e)
-
-    Start_Time = JDstart*86400 # convert JD to s
-    End_Time = Start_Time + orbits*period
-
-    n_times = int((End_Time - Start_Time)/interval)
-
-    time_vec = np.linspace(Start_Time, End_Time, n_times)
-    time_vec = np.reshape(time_vec, [len(time_vec), 1])
-
-    rvmat = utils.orbit_prop(rv0, time_vec) # Nx6 position matrix
-    DCM_nom = desired_attitude(rvmat)
-    w_nom = desired_angular_vel(rvmat)
-
-
+    # format output
     data = np.concatenate((time_vec, rvmat, DCM_nom, w_nom), axis=1)
     return data
 
 
 def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_thrust):
-    #print(Bxyz)
+    # inputs:
+    #  -  1x3  perturbation array
+    #  -  16x1 thrust array
+    #  -  3x1 inertial angular velocity array
+    #  -  3x3 body XYZ orientation array
+    #  -  3x3 satellite inertial matrix
+    #  -  scalar thrust duration time
+    #
+    # output: 
+    #  -  
+
+    # print(Bxyz)
 
     # initialize variables
 
@@ -68,7 +83,6 @@ def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_th
     new_angular_body = np.zeros([3, 1])
     new_angular_inertial = np.zeros([3, 1])
     d_angle = np.zeros([3, 1])
-
     angular_body = np.matmul(np.matrix.transpose(DCM0), angular_inertial)
 
     # sum thrust moments around body axes
@@ -122,7 +136,7 @@ def sensors(angular_vel_inertial, Bxyz, Sat_pos):
 
     # vector directions
 
-    r_Sun_i = au*np.array([0, 1, 0])
+    r_Sun_i = au*np.array([[0], [1], [0]])
     e_Sun_i = r_Sun_i/np.linalg.norm(r_Sun_i)
 
     r_Sat_i = np.matrix.transpose(Sat_pos)
@@ -150,7 +164,7 @@ def sensors(angular_vel_inertial, Bxyz, Sat_pos):
     return meaurements
 
 
-def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, angular_observed, r_Sat_i, dt_thrust):
+def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, observedAngular, r_Sat_i, dt_thrust):
 
     # This function reads vector information from sensors to determine the
     # attitude and angular velocities of the satellite. Data is also read from
@@ -160,14 +174,17 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, angular_observed, r_Sat_i, dt_thrust):
 
     # define maximum and minimum errors
 
-    thrust_command = np.zeros([4, 4])
+    thrustCommand = np.zeros([4, 4])
+    b_orient = np.zeros([3, 3])
+    i_orient = np.zeros([3, 3])
 
-    negative_angle = -2   # deg
-    positive_angle = 2    # deg
-    negative_rate = -.015 # deg/s
-    positive_rate = .015  # deg/s
 
-    au = np.au
+    negativeAngle = -2   # deg
+    positiveAngle = 2    # deg
+    negativeRate = -.015 # deg/s
+    positiveRate = .015  # deg/s
+
+    au = cn.au
     r_Sun_i = au*np.array([0, 1, 0])
 
     r_Sat_i = -np.matrix.transpose(r_Sat_i)
@@ -175,7 +192,7 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, angular_observed, r_Sat_i, dt_thrust):
     r_Sun2Sat_i = r_Sun_i - r_Sat_i
 
     thrust_duration = dt_thrust
-    thrust_command = np.zeros([4, 4])
+
 
     # ++++++++++++++++++ TRIAD +++++++++++++++++++++ #
 
@@ -188,15 +205,95 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, angular_observed, r_Sat_i, dt_thrust):
 
     # algorithm
 
-    x_b = e_Sat_b
-    z_b = np.cross(x_b, e_Sun2Sat_b)/np.linalg.norm(np.cross(x_b, e_Sun2Sat_b))
-    y_b = np.cross(z_b, x_b)
+    x_b = e_Sat_b[:, 0]
+    z_b = np.cross(x_b, e_Sun2Sat_b, axisa=0, axisb=0, axisc=0)/np.linalg.norm(np.cross(x_b, e_Sun2Sat_b, axisa=0, axisb=0,axisc=0))
+    y_b = np.cross(z_b, x_b, axisa = 0, axisb =0)
+
 
     x_r = e_Sat_r
     z_r = np.cross(x_r, e_Sun2Sat_r)/np.linalg.norm(np.cross(x_r, e_Sun2Sat_r))
     y_r = np.cross(z_r, x_r)
 
+    # print(x_b.shape)
+
+    b_orient[:, 0] = np.array([x_b[0, 0], x_b[1, 0], x_b[2, 0]])
+    b_orient[:, 1] = y_b
+    b_orient[:, 2] = np.array([z_b[0, 0], z_b[1, 0], z_b[2, 0]])
+
+    i_orient[:, 0] = x_r
+    i_orient[:, 1] = y_r
+    i_orient[:, 2] = z_r
+
+    T1 = np.matmul(b_orient, np.matrix.transpose(i_orient))
+    T2 = np.matrix.transpose(T1)
+
+    print(T2[0:3])
+
+    T2_copy = T2.copy() # make non-strided somehow....?
+
+    RPY = spice.m2eul(T2_copy, 1, 2, 3)
+
+    print(RPY)
+    RPY = RPY*180/np.pi
+
+
+
+
+# =============== Error Correction ================= #
+
+
+    if RPY[0] < negativeAngle:           # Roll error correction
+        thrustCommand[0, 1] = 1
+        thrustCommand[2, 1] = 1
+    elif RPY[0] > positiveAngle:
+        thrustCommand[0, 3] = 1
+        thrustCommand[2, 3] = 1
+
+    if RPY[1] < negativeAngle:           # Pitch error correction
+        thrustCommand[1, 2] = 1
+        thrustCommand[3, 0] = 1
+    elif RPY[1] > positiveAngle:
+        thrustCommand[1, 0] = 1
+        thrustCommand[3, 2] = 1
+
+    if RPY[2] < negativeAngle:           # Yaw error correction
+        thrustCommand[0, 0] = 1
+        thrustCommand[2, 2] = 1
+    elif RPY[2] > positiveAngle:
+        thrustCommand[0, 2] = 1
+        thrustCommand[2, 0] = 1
+
+
+
+# ================= RATE correction ================= #
+
+    if observedAngular[0, 0] > positiveRate:          # Roll rate correction
+        thrustCommand[0, 3] = 1
+        thrustCommand[2, 3] = 1
+
+    elif observedAngular[0, 0] < negativeRate:
+        thrustCommand[0, 1] = 1
+        thrustCommand[2, 1] = 1
+
+
+    if observedAngular[1, 0] > positiveRate:          # Pitch rate correction
+        thrustCommand[1, 0] = 1
+        thrustCommand[3, 2] = 1
+
+    elif observedAngular[1, 0] < negativeRate:
+        thrustCommand[1, 2] = 1
+        thrustCommand[3, 0] = 1
+
+    if observedAngular[2, 1] > positiveRate:          # Yaw rate correction
+        thrustCommand[0, 2] = 1
+        thrustCommand[2, 0] = 1
+
+    elif observedAngular[2, 1] < negativeRate:
+        thrustCommand[0, 0] = 1
+        thrustCommand[2, 2] = 1
+
+
+    t_command_t_duration_RPY = np.concatenate([thrustCommand[0, :], thrustCommand[1, :], \
+        thrustCommand[2, :], thrustCommand[3, 0], thrust_duration, RPY], axis=1)
     
-
-
-    return 0
+    return t_command_t_duration_RPY
