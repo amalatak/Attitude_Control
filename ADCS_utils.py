@@ -197,7 +197,7 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, observedAngular, r_Sat_i, dt_thrust):
     #  -  3x1 Satellite position vector, inertial frame
     #  -  scalar value for thruster duration
     #
-    # outputs 1x26 array of:
+    # outputs 1x20 array of:
     #  -  4x4 binary thruster command
     #  -  scalar thrust duration
     #  -  1x3 Roll-Pitch-Yaw angles in degrees
@@ -324,6 +324,9 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, observedAngular, r_Sat_i, dt_thrust):
         thrustCommand[2, :], thrustCommand[3, :], thrust_duration, RPY]
 
     return t_command_t_duration_RPY
+
+
+
 
 def rcs_thrust(thrust_command, time, dt_thrust):
     # this function calculates all of the outputs of the
