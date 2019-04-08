@@ -134,6 +134,15 @@ def sat_dynamics(perturbations, thrust_arr, angular_inertial, Bxyz, I_sat, dt_th
 
 
 def sensors(angular_vel_inertial, Bxyz, Sat_pos):
+    # inputs:
+    #  -  3x1 angular velocity in ECI
+    #  -  3x3 satellite attitude in ECI
+    #  -  1x3 Satellite position in ECI
+    #
+    # outputs 3x3 array of:
+    #  -  3x1 Sun to satellite direction vector in body coordinates
+    #  -  3x1 Satellite direction vector in body coordinates
+    #  -  3x1 Angular velocity as measured by the gyro
     
     au = cn.au                                # scalar distance to the sun, in m
     bias = np.zeros([3, 1])                   # 3x1 gyro bias vec
@@ -141,26 +150,24 @@ def sensors(angular_vel_inertial, Bxyz, Sat_pos):
     sun_dir = np.array([[0], [1], [0]])       # 3x1 unit vector to sun from ECI
     gyro = angular_vel_inertial + bias + ARW  # 3x1 gyro measurement of angular velocity
 
-
     # vector directions
     # 3x1 sun vectors
     r_Sun_i = au*sun_dir
-    e_Sun_i = r_Sun_i/np.linalg.norm(r_Sun_i)     # 3x1 sun vector ECI
+    # e_Sun_i = r_Sun_i/np.linalg.norm(r_Sun_i)     # 3x1 sun vector ECI
 
     r_Sat_i = np.matrix.transpose(Sat_pos)
     r_Sat_i = np.array([Sat_pos])
     r_Sat_i = r_Sat_i.T
-    e_Sat_i = r_Sat_i/np.linalg.norm(r_Sat_i)     # 3x1 sat vector ECI
+    # e_Sat_i = r_Sat_i/np.linalg.norm(r_Sat_i)     # 3x1 sat vector ECI
 
     rSun2Sat = r_Sun_i - r_Sat_i
-    e_Sun2Sat = rSun2Sat/np.linalg.norm(rSun2Sat) # vector from sun to sat
+    # e_Sun2Sat_i = rSun2Sat/np.linalg.norm(rSun2Sat) # 3x1 vector from sun to sat
 
-    # Calculate Sat to Sun vector direction and Sat to Earth direction to send to 
-    # ADCS, plus a little noise
+    # Calculate Sat to Sun vector direction and Sat to Earth direction vector to  
+    # send to ADCS, and add simulated noise
 
     r_Sun2Sat_b = np.matmul(Bxyz, rSun2Sat) + .0001*np.array([[random.randint(0, 100)], \
         [random.randint(0, 100)], [random.randint(0, 100)]])
-
 
     r_Sat_b = np.matmul(-Bxyz, r_Sat_i) + .0001*np.array([[random.randint(0, 100)], \
         [random.randint(0, 100)], [random.randint(0, 100)]])
@@ -181,6 +188,21 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, observedAngular, r_Sat_i, dt_thrust):
     # the orbitData function results to determine the desired attitude at any
     # given time. Once the observed attitude is calculated, the thruster
     # commands are calculated and then sent to the thruster block
+
+    # inputs:
+    #  -  3x3 Radial-Normal-Vel orientation matrix
+    #  -  3x1 Sun to Satellite unit vector in the body frame
+    #  -  3x1 Satellite position unit vector in the body frame
+    #  -  3x1 Angular Velocity vector 
+    #  -  3x1 Satellite position vector, inertial frame
+    #  -  scalar value for thruster duration
+    #
+    # outputs 1x26 array of:
+    #  -  4x4 binary thruster command
+    #  -  scalar thrust duration
+    #  -  1x3 Roll-Pitch-Yaw angles in degrees
+    # 
+    # note that it outputs a list with arrays within the list
 
     # define maximum and minimum errors
 
@@ -236,14 +258,10 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, observedAngular, r_Sat_i, dt_thrust):
 
     T1 = np.matmul(b_orient, np.matrix.transpose(i_orient))
     T2 = np.matrix.transpose(T1)
-
-    print(T2[0:3])
-
-    T2_copy = T2.copy() # make non-strided somehow....?
+    T2_copy = T2.copy()     # make non-strided somehow
 
     RPY = spice.m2eul(T2_copy, 1, 2, 3)
-
-    print(RPY)
+    RPY = np.array(RPY)     # Roll, Pitch, Yaw tuple to numpy array
     RPY = RPY*180/np.pi
 
 
@@ -294,16 +312,75 @@ def ADCS(RNV, e_Sun2Sat_b, e_Sat_b, observedAngular, r_Sat_i, dt_thrust):
         thrustCommand[1, 2] = 1
         thrustCommand[3, 0] = 1
 
-    if observedAngular[2, 1] > positiveRate:          # Yaw rate correction
+    if observedAngular[2, 0] > positiveRate:          # Yaw rate correction
         thrustCommand[0, 2] = 1
         thrustCommand[2, 0] = 1
 
-    elif observedAngular[2, 1] < negativeRate:
+    elif observedAngular[2, 0] < negativeRate:
         thrustCommand[0, 0] = 1
         thrustCommand[2, 2] = 1
 
+    t_command_t_duration_RPY = [thrustCommand[0, :], thrustCommand[1, :], \
+        thrustCommand[2, :], thrustCommand[3, :], thrust_duration, RPY]
 
-    t_command_t_duration_RPY = np.concatenate([thrustCommand[0, :], thrustCommand[1, :], \
-        thrustCommand[2, :], thrustCommand[3, 0], thrust_duration, RPY], axis=1)
-    
     return t_command_t_duration_RPY
+
+def rcs_thrust(thrust_command, time, dt_thrust):
+    # this function calculates all of the outputs of the
+    # simulated RCS thrusters
+    #
+    # Inputs:
+    #  -  4x4 binary thrust array
+    #  -  scalar of time
+    #
+    # Outputs:
+
+    thrust_shape = thrust_command.shape
+    duration = np.linspace(0, time + .5, (time + .5)/dt_thrust)
+    thrust_out_all = np.zeros([len(duration), thrust_shape[0]*thrust_shape[1]])
+    thrust_out_shape = thrust_out_all.shape
+
+    for i in range(thrust_out_shape[1]):
+        thrust_out = PID(time, duration, dt_thrust)
+        for j in range(thrust_out_shape[0]):
+            thrust_out_all[j, i] = thrust_out[0, j]
+
+    for k in range(thrust_shape[0]):
+        for p in range(thrust_shape[1]):
+            if thrust_command[k, p] == 0:
+                thrust_out_all[(4*(k-1) + p), p] = 0
+
+    return [thrust_out_all, duration]
+    
+def PID(time, thrust_time_arr, dt_thrust):
+
+    # initializations
+    max_thrust = 5
+    command_thrust = 0
+    thrust_out = np.zeros([1, len(thrust_time_arr)])
+    pLast = 0
+    dt = 0
+    summ = 0
+    Kp = 1.1
+    Ki = .01
+    Kd = .005
+
+    for i in range(len(thrust_time_arr)-1):
+        if thrust_time_arr[i] <= time:
+            command_thrust = max_thrust
+        elif thrust_time_arr[i] > time:
+            command_thrust = 0
+        
+        p = command_thrust - thrust_out[0, i]
+        dt = (p - pLast)/dt_thrust
+        summ += p
+        pid_term = Kp*p - Kd*dt + Ki*summ
+        thrust_out[0, i+1] = thrust_out[0, i] + pid_term
+        pLast = p
+
+    thrust_out[0, len(thrust_time_arr)-1] = 0
+    thrust_out[0, 0] = 0
+    return thrust_out
+
+    
+
