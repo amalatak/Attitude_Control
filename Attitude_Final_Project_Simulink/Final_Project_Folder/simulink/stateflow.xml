@@ -1,0 +1,2725 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Stateflow>
+  <machine id="16">
+    <P Name="created">29-Oct-2018 18:42:19</P>
+    <P Name="isLibrary">0</P>
+    <P Name="sfVersion">80000014</P>
+    <Children>
+      <target id="179" name="sfun">
+        <P Name="description">Default Simulink S-Function Target.</P>
+      </target>
+      <chart id="17">
+        <P Name="name">Dynamics//Kinematics/MATLAB Function1</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">17</P>
+        <P Name="ssIdHighWaterMark">5</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">2</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">fcn</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">17</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function q0 = fcn()
+p = 6657000;   % m
+mu = 3.986e14; % m^3/s^2
+w = sqrt(mu/p^3);
+
+ri = (p/sqrt(2))*[-cos(0); sqrt(2)*sin(0); cos(0)];
+bx = -ri/norm(ri);
+
+ridot = (w*p/sqrt(2))*[sin(0); sqrt(2)*cos(0); -sin(0)];
+by = ridot/norm(ridot);
+
+bz = cross(bx, by);
+
+DCM = [bx&apos;; by&apos;; bz&apos;];
+
+qs = .5*sqrt(1 + trace(DCM));
+qx = (DCM(3,2) - DCM(2,3))/(4*qs);
+qy = (DCM(1,3) - DCM(3,1))/(4*qs);
+qz = (DCM(2,1) - DCM(1,2))/(4*qs);
+
+q0nom = [qx; qy; qz; qs];
+
+thetaerr = 2;
+qerr = [0; sind(thetaerr/2); 0; cosd(thetaerr/2)];
+
+q0 = qmult(qerr, q0nom);</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="5" name="q0">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">17</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">17</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="23">
+        <P Name="name">MATLAB Function9</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">23</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">11</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">10</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Pos_Vel</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">23</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function [ri, vel, qnom, DCM] = Pos_Vel(t)
+
+p = 6657000;   % m
+mu = 3.986e14; % m^3/s^2
+w = sqrt(mu/p^3);
+
+ri = (p/sqrt(2))*[-cos(w*t); sqrt(2)*sin(w*t); cos(w*t)];
+bx = -ri/norm(ri);
+
+ridot = (w*p/sqrt(2))*[sin(w*t); sqrt(2)*cos(w*t); -sin(w*t)];
+by = ridot/norm(ridot);
+
+bz = cross(bx, by);
+
+DCM = [bx&apos;; by&apos;; bz&apos;];
+
+qs = .5*sqrt(1 + trace(DCM))*sign(DCM(2,1));
+qx = (DCM(2,3) - DCM(3,2))/(4*qs);
+qy = (DCM(3,1) - DCM(1,3))/(4*qs);
+qz = (DCM(1,2) - DCM(2,1))/(4*qs);
+
+qnom = [qx; qy; qz; qs]; % inertial to body quaternion - scalar part last
+
+vel = ridot;</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="7" name="ri">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="8" name="vel">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="t">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="10" name="qnom">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="11" name="DCM">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">23</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">23</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="33">
+        <P Name="name">Attitude Determination/MATLAB Function</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">33</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">8</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">11</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">TRIAD</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">33</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function DCMest = TRIAD(d1b, magmeas, magact, pos)
+
+d1i = -pos/norm(pos);
+d2i = magact/norm(magact);
+
+d2b = magmeas/norm(magmeas);
+
+
+xb = d1b;
+yb = cross(d1b, d2b)/norm(cross(d1b, d2b));
+zb = cross(xb, yb);
+
+xi = d1i;
+yi = cross(d1i, d2i)/norm(cross(d1i, d2i));
+zi = cross(xi, yi);
+
+DCMest = [xb yb zb]*[xi yi zi]&apos;;</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="d1b">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="magmeas">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="8" name="magact">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="DCMest">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="pos">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">33</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">33</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="43">
+        <P Name="name">Sensors/MATLAB Function</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">43</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">7</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">12</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Measure_Ang_Vel</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">43</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function wmeas = Measure_Ang_Vel(meas_flag, wact, time)
+
+b = 1;             % gyro bias deg/hr
+
+b = b*pi/180/3600; % gyro bias rad/s
+
+gyro_walk = .22;     % angular random walk vgyro(t)
+                      % deg/hr
+
+vgyro = (gyro_walk*(pi/180)/(60))^2; % rad/s
+
+gyro_walk_randomize = [.8147; .9058; .1270]; 
+% constants from MATLAB rand to ensure non-uniform walk in 
+% each direction
+perturbations = b + vgyro*time*gyro_walk_randomize;
+
+if ~meas_flag
+    perturbations = [0; 0; 0];
+end
+
+wmeas = wact + perturbations;
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="7" name="meas_flag">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="wact">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="wmeas">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="time">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">43</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">43</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="52">
+        <P Name="name">Sensors/MATLAB Function1</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">52</P>
+        <P Name="ssIdHighWaterMark">8</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">13</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">mag_measure</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">52</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function Bmeas = mag_measure(err_flag, Tib, Bi, randerr)
+
+vmag = 0;
+
+if err_flag
+    vmag = 8e-9;  % magnetomer error vmag(t)
+end
+
+
+Bmeas = Tib*Bi + vmag*randerr;
+
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="8" name="err_flag">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="Tib">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="Bi">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="Bmeas">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="randerr">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">52</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">52</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="62">
+        <P Name="name">Sensors/MATLAB Function2</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">62</P>
+        <P Name="ssIdHighWaterMark">5</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">14</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">DCM</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">62</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function Tib = DCM(qact)
+
+qv = qact(1:3);
+
+qvx = [0 -qv(3) qv(2);
+    qv(3) 0 -qv(1);
+    -qv(2) qv(1) 0];
+
+Tib = eye(3) - 2*qact(4)*qvx + 2*qvx*qvx;
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="qact">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="Tib">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">62</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">62</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="69">
+        <P Name="name">Sensors/MATLAB Function3</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">69</P>
+        <P Name="ssIdHighWaterMark">5</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">15</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Magnetic_Field</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">69</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function Bi = Magnetic_Field(ri)
+
+Bo = 3.12e-5;
+Re = 6378000;
+
+nz2i = -ri/norm(ri);
+ny2i = cross(nz2i, [1; 0; 0])/norm(cross(nz2i, [1; 0; 0]));
+nx2i = cross(ny2i, nz2i);
+Ti2n = [nx2i&apos;; ny2i&apos;; nz2i&apos;];
+
+rxy = sqrt(ri(1)^2 + ri(2)^2);
+
+lat = atan2(ri(3), rxy);
+
+Bn = Bo*(Re/norm(ri))^3*[cos(lat); 0; -2*sin(lat)];
+
+Bi = (Ti2n&apos;)*Bn;
+
+
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="ri">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="Bi">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">69</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">69</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="76">
+        <P Name="name">Sensors/MATLAB Function4</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">76</P>
+        <P Name="ssIdHighWaterMark">8</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">16</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Horizon_Sensor</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">76</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function dmeas = Horizon_Sensor(Tib, randerr, err_flag, ri)
+
+horizon_sensor_err = 1; %deg
+scale = horizon_sensor_err*pi/180;
+
+if ~err_flag
+    scale = 0;
+end
+
+Trand = eye(3) - scale*randerr;  % horizon error vhor -&gt; random 3x3 err mat
+
+dmeas = Trand*Tib*(-ri/norm(ri));
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="Tib">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="randerr">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="8" name="err_flag">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="dmeas">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="ri">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">76</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">76</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="86">
+        <P Name="name">Subsystem/MATLAB Function</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">86</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">6</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">18</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Nominal_Attitude</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">86</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function DCMnom = Nominal_Attitude(ri, ridot)
+
+bx = -ri/norm(ri);
+
+by = ridot/norm(ridot);
+
+bz = cross(bx, by);
+
+DCMnom = [bx&apos;; by&apos;; bz&apos;];
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="ri">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="DCMnom">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="ridot">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">86</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">86</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="94">
+        <P Name="name">Subsystem/MATLAB Function1</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">94</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">6</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">19</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">dAtt</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">94</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function dAtt = dAtt(DCMest, DCMnom)
+
+dAtt = DCMest*DCMnom&apos;;
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="6" name="DCMest">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="DCMnom">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="dAtt">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">94</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">94</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="102">
+        <P Name="name">Subsystem/MATLAB Function2</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">102</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">5</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">20</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Error</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">102</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function err = Error(dAtt)
+
+err = -.5*[dAtt(3,2) - dAtt(2,3);
+    dAtt(1,3) - dAtt(3,1);
+    dAtt(2,1) - dAtt(1,2)];
+
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="dAtt">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="err">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">102</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">102</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="109">
+        <P Name="name">Subsystem/MATLAB Function3</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">109</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">7</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">21</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">errdot</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">109</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function edot = errdot(wnom, dw, ep)
+
+wx = wnom(1); wy = wnom(2); wz = wnom(3);
+wnomcross = [0 -wz wy;
+    wz 0 -wx;
+    -wy wx 0];
+
+edot = -wnomcross*ep + dw;
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="4" name="wnom">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="edot">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="dw">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="ep">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">109</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">109</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="118">
+        <P Name="name">Subsystem/MATLAB Function4</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">118</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">6</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">22</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">werr</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">118</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function dw = werr(wnom, wtrue)
+
+dw = wtrue - wnom;
+
+
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="6" name="wnom">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="wtrue">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="dw">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">118</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">118</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="126">
+        <P Name="name">Subsystem/MATLAB Function5</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">126</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">11</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">23</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Rxn_Wheel_Rates</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">126</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function RxnWheelRate = Rxn_Wheel_Rates(wbody, Jsat, K, Cw, Edot, E, Wrxn)
+
+RxnWheelRate = Jsat*K(1)*E/Cw + Jsat*K(2)*Edot/Cw - cross(wbody, Wrxn);
+
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="10" name="wbody">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="Jsat">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="RxnWheelRate">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="K">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="Cw">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="9" name="Edot">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="8" name="E">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="11" name="Wrxn">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">126</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">126</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="139">
+        <P Name="name">Actuators/MATLAB Function</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">139</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">8</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">24</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Rxn_Rates_Actual</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">139</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function RxnRateAct = Rxn_Rates_Actual(RxnRates, randerr, err_flag)
+
+Rpm_Max = 10000;
+reaction_wheel_error = 5; % +- reaction wheel rpm error
+w_Percent_Err = reaction_wheel_error/Rpm_Max;
+pert = w_Percent_Err*randerr*norm(RxnRates);
+
+if ~err_flag
+    pert = [0; 0; 0];
+end
+
+RxnRateAct = RxnRates + pert;
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="5" name="RxnRateAct">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="6" name="RxnRates">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="randerr">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="8" name="err_flag">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">139</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">139</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="148">
+        <P Name="name">Actuators/MATLAB Function1</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">148</P>
+        <P Name="ssIdHighWaterMark">6</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">25</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">Rxn_Ang_Mom</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">148</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function RxnAngMom = Rxn_Ang_Mom(Cw, wrxn)
+
+RxnAngMom = Cw*wrxn;
+
+</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="6" name="Cw">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="wrxn">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="RxnAngMom">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">148</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">148</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="156">
+        <P Name="name">Actuators/MATLAB Function2</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">156</P>
+        <P Name="ssIdHighWaterMark">6</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">26</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">AngMomRate</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">156</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function dHrxn = AngMomRate(Cw, dwrxn)
+
+dHrxn = Cw*dwrxn;</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="6" name="Cw">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="dwrxn">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="dHrxn">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">156</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">156</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+      <chart id="164">
+        <P Name="name">Dynamics//Kinematics/MATLAB Function</P>
+        <P Name="windowPosition">[422 539.941 189 413]</P>
+        <P Name="viewLimits">[0 156.75 0 153.75]</P>
+        <P Name="screen">[1 1 3600 1200 1.180555555555556]</P>
+        <P Name="viewObj">164</P>
+        <P Name="visible">1</P>
+        <subviewS/>
+        <P Name="ssIdHighWaterMark">15</P>
+        <P Name="decomposition">CLUSTER_CHART</P>
+        <P Name="type">EML_CHART</P>
+        <P Name="chartFileNumber">27</P>
+        <P Name="disableImplicitCasting">1</P>
+        <eml>
+          <P Name="name">ang_accel</P>
+        </eml>
+        <Children>
+          <state SSID="1">
+            <P Name="labelString">eML_blk_kernel()</P>
+            <P Name="position">[18 64.5 118 66]</P>
+            <P Name="fontSize">12</P>
+            <P Name="superState">SUBCHART</P>
+            <P Name="subviewer">164</P>
+            <P Name="type">FUNC_STATE</P>
+            <P Name="decomposition">CLUSTER_STATE</P>
+            <eml>
+              <P Name="isEML">1</P>
+              <P Name="script">function [dw_sc, dq] = ...
+ang_accel(w_sc, J, Hdotwheel, Hwheel, q, vel, DCM, pos)
+
+% === Aerodynamic TOrque Perturbation === %
+A = .1*.1; % m^2
+Cd = 4;
+p = 2e-11; %kg/m^3
+vhat = vel/norm(vel);
+Fd = -.5*p*dot(vel, vel)*Cd*A*DCM*vhat*dot(vhat, [0 1 0]);
+
+r_cg = [.01; .15; .01]; % 3u cubesat
+
+Maero = cross(r_cg, Fd);
+
+% === Gravity Gradient Perturbation === %
+
+GM = 3.986e14;
+r = norm(pos);
+Mgrav = 3*GM*cross(pos, J*pos)/(r^5);
+
+
+
+dw_sc = J\(cross(w_sc, J*w_sc) - Hdotwheel ...
+ - cross(w_sc, Hwheel) + Maero + Mgrav);
+
+wq = [w_sc(1); w_sc(2); w_sc(3); 0];
+
+dq = .5*qmult(wq, q);</P>
+              <P Name="editorLayout" Class="double">Matrix(4,1)
+[10.0, 5.0, 700.0, 500.0]</P>
+            </eml>
+          </state>
+          <data SSID="6" name="w_sc">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="4" name="J">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="5" name="dw_sc">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="7" name="Hdotwheel">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="8" name="Hwheel">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="9" name="q">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="10" name="dq">
+            <P Name="scope">OUTPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_NO</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="11" name="vel">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="13" name="DCM">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <data SSID="14" name="pos">
+            <P Name="scope">INPUT_DATA</P>
+            <props>
+              <array>
+                <P Name="size">-1</P>
+              </array>
+              <type>
+                <P Name="method">SF_INHERITED_TYPE</P>
+                <P Name="primitive">SF_DOUBLE_TYPE</P>
+                <P Name="isSigned">1</P>
+                <P Name="wordLength">16</P>
+              </type>
+              <P Name="complexity">SF_COMPLEX_INHERITED</P>
+              <P Name="frame">SF_FRAME_INHERITED</P>
+              <unit>
+                <P Name="name">inherit</P>
+              </unit>
+            </props>
+            <P Name="dataType">Inherit: Same as Simulink</P>
+          </data>
+          <transition SSID="2">
+            <P Name="labelString">{eML_blk_kernel();}</P>
+            <P Name="labelPosition">[28.125 13.875 102.544 14.964]</P>
+            <P Name="fontSize">12</P>
+            <src>
+              <P Name="intersection">[0 0 1 0 23.5747 14.625 0 0]</P>
+            </src>
+            <dst>
+              <P Name="SSID">3</P>
+              <P Name="intersection">[1 0 -1 0 23.5747 42.5747 0 0]</P>
+            </dst>
+            <P Name="midPoint">[23.5747 24.9468]</P>
+            <P Name="dataLimits">[21.175 25.975 14.625 42.575]</P>
+            <P Name="subviewer">164</P>
+            <P Name="drawStyle">SMART</P>
+            <slide>
+              <P Name="sticky">BOTH_STICK</P>
+            </slide>
+            <P Name="executionOrder">1</P>
+          </transition>
+          <junction SSID="3">
+            <P Name="position">[23.5747 49.5747 7]</P>
+            <P Name="subviewer">164</P>
+            <P Name="type">CONNECTIVE_JUNCTION</P>
+          </junction>
+        </Children>
+      </chart>
+    </Children>
+  </machine>
+  <instance id="22">
+    <P Name="machine">16</P>
+    <P Name="name">Dynamics//Kinematics/MATLAB Function1</P>
+    <P Name="chart">17</P>
+  </instance>
+  <instance id="32">
+    <P Name="machine">16</P>
+    <P Name="name">MATLAB Function9</P>
+    <P Name="chart">23</P>
+  </instance>
+  <instance id="42">
+    <P Name="machine">16</P>
+    <P Name="name">Attitude Determination/MATLAB Function</P>
+    <P Name="chart">33</P>
+  </instance>
+  <instance id="51">
+    <P Name="machine">16</P>
+    <P Name="name">Sensors/MATLAB Function</P>
+    <P Name="chart">43</P>
+  </instance>
+  <instance id="61">
+    <P Name="machine">16</P>
+    <P Name="name">Sensors/MATLAB Function1</P>
+    <P Name="chart">52</P>
+  </instance>
+  <instance id="68">
+    <P Name="machine">16</P>
+    <P Name="name">Sensors/MATLAB Function2</P>
+    <P Name="chart">62</P>
+  </instance>
+  <instance id="75">
+    <P Name="machine">16</P>
+    <P Name="name">Sensors/MATLAB Function3</P>
+    <P Name="chart">69</P>
+  </instance>
+  <instance id="85">
+    <P Name="machine">16</P>
+    <P Name="name">Sensors/MATLAB Function4</P>
+    <P Name="chart">76</P>
+  </instance>
+  <instance id="93">
+    <P Name="machine">16</P>
+    <P Name="name">Subsystem/MATLAB Function</P>
+    <P Name="chart">86</P>
+  </instance>
+  <instance id="101">
+    <P Name="machine">16</P>
+    <P Name="name">Subsystem/MATLAB Function1</P>
+    <P Name="chart">94</P>
+  </instance>
+  <instance id="108">
+    <P Name="machine">16</P>
+    <P Name="name">Subsystem/MATLAB Function2</P>
+    <P Name="chart">102</P>
+  </instance>
+  <instance id="117">
+    <P Name="machine">16</P>
+    <P Name="name">Subsystem/MATLAB Function3</P>
+    <P Name="chart">109</P>
+  </instance>
+  <instance id="125">
+    <P Name="machine">16</P>
+    <P Name="name">Subsystem/MATLAB Function4</P>
+    <P Name="chart">118</P>
+  </instance>
+  <instance id="138">
+    <P Name="machine">16</P>
+    <P Name="name">Subsystem/MATLAB Function5</P>
+    <P Name="chart">126</P>
+  </instance>
+  <instance id="147">
+    <P Name="machine">16</P>
+    <P Name="name">Actuators/MATLAB Function</P>
+    <P Name="chart">139</P>
+  </instance>
+  <instance id="155">
+    <P Name="machine">16</P>
+    <P Name="name">Actuators/MATLAB Function1</P>
+    <P Name="chart">148</P>
+  </instance>
+  <instance id="163">
+    <P Name="machine">16</P>
+    <P Name="name">Actuators/MATLAB Function2</P>
+    <P Name="chart">156</P>
+  </instance>
+  <instance id="178">
+    <P Name="machine">16</P>
+    <P Name="name">Dynamics//Kinematics/MATLAB Function</P>
+    <P Name="chart">164</P>
+  </instance>
+</Stateflow>
